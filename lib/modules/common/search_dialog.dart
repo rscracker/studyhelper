@@ -69,16 +69,12 @@ class SearchDialog extends StatelessWidget {
                 if (nameController.text.isNotEmpty) {
                   final result = await UserService.to.findUsers(
                       isNick: false, nameOrNick: nameController.text);
-                  if (result.docs.isEmpty) {
+                  if (result.isEmpty) {
                     Get.dialog(CustomDialog(
                         text: '검색 결과가 없습니다', onPressed: () => Get.back()));
                   } else {
                     Get.back();
-                    Get.dialog(SerachResultDialog(
-                        users: List.generate(
-                            result.docs.length,
-                            (index) => UserModel.fromJson(result.docs[index]
-                                .data() as Map<String, dynamic>))));
+                    //Get.dialog(SearchResultDialog(users: result));
                   }
                 }
               },
@@ -122,16 +118,12 @@ class SearchDialog extends StatelessWidget {
                 if (nickController.text.isNotEmpty) {
                   final result = await UserService.to.findUsers(
                       isNick: false, nameOrNick: nickController.text);
-                  if (result.docs.isEmpty) {
+                  if (result.isEmpty) {
                     Get.dialog(CustomDialog(
                         text: '검색 결과가 없습니다', onPressed: () => Get.back()));
                   } else {
                     Get.back();
-                    Get.dialog(SerachResultDialog(
-                        users: List.generate(
-                            result.docs.length,
-                            (index) => UserModel.fromJson(result.docs[index]
-                                .data() as Map<String, dynamic>))));
+                    //Get.dialog(SearchResultDialog(users: result));
                   }
                 }
               },

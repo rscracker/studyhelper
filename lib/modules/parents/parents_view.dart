@@ -323,7 +323,7 @@ class _Student extends StatelessWidget {
                 )),
           ),
           StreamBuilder(
-              stream: UserService.to.getFriends(),
+              stream: null,
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (!snapshot.hasData) {

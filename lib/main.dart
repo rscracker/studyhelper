@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:studyhelper/modules/main/bindings/main_binding.dart';
+import 'package:studyhelper/routes/app_pages.dart';
 import 'package:studyhelper/services/notification_service.dart';
 import 'package:studyhelper/services/todo_service.dart';
 import 'package:studyhelper/services/user_service.dart';
@@ -60,20 +61,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         fontFamily: 'NotoSansKR',
       ),
-      home: LoginView(),
+      home: const LoginView(),
       initialBinding: BindingsBuilder(() {
         Get.put(UserService());
         Get.put(TodoService());
         Get.put(NotificationService());
       }),
-      getPages: [
-        GetPage(name: '/main', page: () => MainView(), binding: MainBinding())
-      ],
+      getPages: AppPages.routes,
     );
   }
 }

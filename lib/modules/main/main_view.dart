@@ -105,7 +105,7 @@ class _Profile extends StatelessWidget {
                     category: '공부 기록',
                     icon: Icons.insert_chart_outlined,
                     onPressed: () {
-                      Get.to(() => HistoryView());
+                      Get.toNamed('/history');
                     }),
                 _icon(
                     category: '일정',
@@ -114,12 +114,14 @@ class _Profile extends StatelessWidget {
                 _icon(
                     category: '친구',
                     icon: Icons.supervisor_account_rounded,
-                    onPressed: () {}),
+                    onPressed: () {
+                      Get.toNamed('/friends');
+                    }),
                 _icon(
                     category: '알림',
                     icon: Icons.notifications_none_outlined,
                     onPressed: () {
-                      Get.to(() => NotificationView());
+                      Get.toNamed('/notification');
                     }),
               ],
             ),

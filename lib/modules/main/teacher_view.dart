@@ -208,9 +208,7 @@ class _StudentItem extends StatelessWidget {
                 ),
                 GestureDetector(
                     onTap: () {
-                      UserService.to.addNotifcation(
-                          receiver: snapshot.data!,
-                          content: '수학선생님이 5분뒤에 도착 예정입니다.');
+
                     },
                     child: Icon(
                       Icons.chat_bubble_outline,

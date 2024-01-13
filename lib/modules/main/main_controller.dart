@@ -7,6 +7,8 @@ import 'package:studyhelper/services/todo_service.dart';
 import 'package:studyhelper/services/user_service.dart';
 
 class MainController extends GetxController {
+  static MainController get to => Get.find<MainController>();
+
   final todoService = TodoService.to;
   final userService = UserService.to;
   final classController = ClassController.to;

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:studyhelper/data/notification/notification_controller.dart';
 import 'package:studyhelper/data/user/model/user_model.dart';
 import 'package:studyhelper/services/user_service.dart';
 import 'package:studyhelper/modules/common/custom_button.dart';
 import 'package:studyhelper/modules/common/custom_dialog.dart';
 import 'package:studyhelper/utils/app_color.dart';
 
-class SerachResultDialog extends StatelessWidget {
+class SearchResultDialog extends StatelessWidget {
   final List<UserModel> users;
-  SerachResultDialog({required this.users, Key? key}) : super(key: key);
-
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController nickController = TextEditingController();
+  final Function({required UserModel user}) onSendFriendRequest;
+  SearchResultDialog(
+      {required this.users, required this.onSendFriendRequest, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,12 +75,7 @@ class SerachResultDialog extends StatelessWidget {
         ),
         CustomButton(
           text: '추가',
-          onPressed: () async {
-            await UserService.to.requestFriend(user: user);
-            Get.back();
-            Get.dialog(CustomDialog(
-                text: '친구 요청이 완료되었습니다.', onPressed: () => Get.back()));
-          },
+          onPressed: () => onSendFriendRequest(user: user),
           buttonColor: AppColor.mainColor,
           height: 40,
           width: 60,

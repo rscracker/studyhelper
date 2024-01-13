@@ -22,14 +22,9 @@ class UserService extends GetxService {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
-  final CollectionReference friendsCollection =
-      FirebaseFirestore.instance.collection('friends');
-
   final CollectionReference friendsRequestCollection =
       FirebaseFirestore.instance.collection('friendsRequest');
 
-  final CollectionReference notificationCollection =
-      FirebaseFirestore.instance.collection('notifications');
 
   final Rx<UserModel> _currentUser = UserModel.initUser().obs;
   UserModel get currentUser => _currentUser.value;
@@ -150,63 +145,25 @@ class UserService extends GetxService {
     return UserModel.fromJson(snapshot.data() as Map<String, dynamic>);
   }
 
-  Future<void> addNotifcation(
-      {required UserModel receiver,
-      required String content,
-      String? type}) async {
-    String docId = notificationCollection.id;
-    await notificationCollection.doc(docId).set({
-      'docId': docId,
-      'type': type ?? '',
-      'receiverToken': receiver.deviceToken,
-      'receiver': receiver.uid,
-      'content': content,
-      'sender': currentUser.uid
-    });
-  }
 
-  Stream<QuerySnapshot> getNotification() {
-    return notificationCollection
-        .where('receiver', isEqualTo: currentUser.uid)
-        .snapshots();
-  }
 
-  Future<QuerySnapshot> findUsers(
+  Future<List<UserModel>> findUsers(
       {required bool isNick, required String nameOrNick}) async {
+    final QuerySnapshot snapshot;
     if (isNick) {
-      return await userCollection.where('nick', isEqualTo: nameOrNick).get();
+      snapshot =
+          await userCollection.where('nick', isEqualTo: nameOrNick).get();
     } else {
-      return await userCollection.where('name', isEqualTo: nameOrNick).get();
+      snapshot =
+          await userCollection.where('name', isEqualTo: nameOrNick).get();
     }
-  }
+    RxList<UserModel> users = RxList.empty();
 
-  Future<void> requestFriend({required UserModel user}) async {
-    await friendsRequestCollection.add({
-      'sender': currentUser.uid,
-      'receiver': user.uid,
-      'createdAt': DateTime.now()
+    snapshot.docs.forEach((e) {
+      users.add(UserModel.fromJson(e.data() as Map<String, dynamic>));
     });
-    addNotifcation(
-        receiver: user,
-        content: '${currentUser.name}님의 친구요청이 있습니다.',
-        type: 'friendRequest');
+
+    return users;
   }
 
-  Future<void> responseFriend(
-      {required bool isAccepted,
-      required Map<String, dynamic> notification}) async {
-    if (isAccepted) {
-      await friendsCollection.doc(currentUser.uid).set({
-        "friends": FieldValue.arrayUnion([notification['sender']])
-      });
-      await friendsCollection.doc(notification['sender']).set({
-        "friends": FieldValue.arrayUnion([currentUser.uid])
-      });
-    }
-    await notificationCollection.doc(notification['docId']).delete();
-  }
-
-  Stream<DocumentSnapshot> getFriends() {
-    return friendsCollection.doc(currentUser.uid).snapshots();
-  }
 }
