@@ -19,8 +19,35 @@ class ClassController extends GetxController {
 
   @override
   void onInit() async {
-    await getStudentClass(uid: currentUser.uid);
+    getClass();
     super.onInit();
+  }
+
+  Future<void> getClass() async {
+    switch (currentUser.type) {
+      case ('학생'):
+        await getStudentClass(uid: currentUser.uid);
+        break;
+      case ('학부모'):
+        await getParentsClass(uid: currentUser.uid);
+        break;
+      default:
+        return;
+    }
+  }
+
+  Future<void> getParentsClass({required String uid}) async {
+    QuerySnapshot snapshot = await classCollection
+        .where('parentsId', arrayContains: UserService.to.currentUser.uid)
+        .get();
+
+    if (snapshot.docs.isEmpty) return;
+
+    List<ClassModel> temp = RxList.empty();
+    for (final e in snapshot.docs) {
+      temp.add(ClassModel.fromJson(e.data() as Map<String, dynamic>));
+    }
+    _classes(temp);
   }
 
   Future<void> getStudentClass({required String uid}) async {

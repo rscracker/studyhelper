@@ -15,6 +15,7 @@ class UserModel with _$UserModel {
     required String deviceToken,
     required bool isRegistered,
     required String type,
+    required List<String>? friends,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -30,6 +31,7 @@ class UserModel with _$UserModel {
       deviceToken: '',
       isRegistered: false,
       type: '',
+      friends: [],
     );
   }
 }

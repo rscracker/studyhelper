@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:studyhelper/data/notification/model/notification_model.dart';
 import 'package:studyhelper/services/notification_service.dart';
 import 'package:studyhelper/data/user/model/user_model.dart';
 import 'package:studyhelper/modules/main/main_view.dart';
@@ -25,12 +26,19 @@ class UserService extends GetxService {
   final CollectionReference friendsRequestCollection =
       FirebaseFirestore.instance.collection('friendsRequest');
 
-
   final Rx<UserModel> _currentUser = UserModel.initUser().obs;
   UserModel get currentUser => _currentUser.value;
   set currentUser(UserModel user) => _currentUser(user);
 
+  final RxList<UserModel> _friends = RxList.empty();
+  List<UserModel> get friends => _friends;
+  set friends(List<UserModel> friends) => _friends(friends);
   RxString verId = ''.obs;
+
+  @override
+  void onReady() {
+    super.onReady();
+  }
 
   Future<bool> signInWithPhoneNumber() async {
     try {
@@ -88,15 +96,12 @@ class UserService extends GetxService {
         uid: uid,
         deviceToken: token,
       );
-      await userCollection.doc(uid).set(UserModel(
-              uid: uid,
-              type: '',
-              nick: '',
-              name: '',
-              age: 0,
-              phoneNum: phoneNumController.text,
-              deviceToken: token,
-              isRegistered: false)
+      await userCollection.doc(uid).set(UserModel.initUser()
+          .copyWith(
+            uid: uid,
+            phoneNum: phoneNumController.text,
+            deviceToken: token,
+          )
           .toJson());
       return Future.value(false);
     } else {
@@ -107,6 +112,7 @@ class UserService extends GetxService {
         await userCollection.doc(user.uid).update({'deviceToken': token});
       }
       currentUser = user;
+      getFriends(myUid: currentUser.uid);
       if (user.isRegistered) {
         return Future.value(true);
       }
@@ -124,7 +130,7 @@ class UserService extends GetxService {
         if (currentUser.type == '선생님') {
           Get.to(() => TeacherView());
         } else if (currentUser.type == '학부모') {
-          Get.to(() => ParentsView());
+          Get.toNamed('/parents');
         } else {
           Get.toNamed('/main');
         }
@@ -145,8 +151,6 @@ class UserService extends GetxService {
     return UserModel.fromJson(snapshot.data() as Map<String, dynamic>);
   }
 
-
-
   Future<List<UserModel>> findUsers(
       {required bool isNick, required String nameOrNick}) async {
     final QuerySnapshot snapshot;
@@ -166,4 +170,31 @@ class UserService extends GetxService {
     return users;
   }
 
+  Future<void> responseFriend({
+    required bool isAccepted,
+    required NotificationModel notification,
+  }) async {
+    if (isAccepted) {
+      await userCollection.doc(currentUser.uid).update({
+        "friends": FieldValue.arrayUnion([notification.sender])
+      });
+      await userCollection.doc(notification.sender).update({
+        "friends": FieldValue.arrayUnion([currentUser.uid])
+      });
+    }
+  }
+
+  void getFriends({required String myUid}) {
+    RxList<UserModel> temp = RxList.empty();
+    userCollection.doc(myUid).snapshots().listen((DocumentSnapshot snapshot) {
+      UserModel user =
+          UserModel.fromJson(snapshot.data() as Map<String, dynamic>);
+      if (user.friends != null) {
+        user.friends!.forEach((e) async {
+          temp.add(await getUser(uid: e));
+        });
+        _friends(temp);
+      }
+    });
+  }
 }

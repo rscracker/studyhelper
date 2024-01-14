@@ -41,12 +41,12 @@ class NotificationView extends GetView<NotificationViewController> {
             ? Center(
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Icon(
                     Icons.notifications_off_outlined,
                     size: 30,
                   ),
-                  const SizedBox(
+                  SizedBox(
                     height: 10,
                   ),
                   Text(
@@ -76,7 +76,7 @@ class NotificationView extends GetView<NotificationViewController> {
         children: [
           Text(
             notification.content,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -86,8 +86,8 @@ class NotificationView extends GetView<NotificationViewController> {
             CustomButton(
               text: '승인',
               onPressed: () {
-                // UserService.to.responseFriend(
-                //     isAccepted: true, notification: notification);
+                controller.responseRequset(
+                    isAccepted: true, notification: notification);
               },
               width: 60,
               height: 30,
@@ -100,8 +100,8 @@ class NotificationView extends GetView<NotificationViewController> {
             CustomButton(
               text: '거절',
               onPressed: () {
-                // UserService.to.responseFriend(
-                //     isAccepted: false, notification: notification);
+                controller.responseRequset(
+                    isAccepted: false, notification: notification);
               },
               width: 60,
               height: 30,

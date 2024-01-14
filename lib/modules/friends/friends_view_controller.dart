@@ -10,14 +10,20 @@ import 'package:studyhelper/services/user_service.dart';
 class FriendsViewController extends GetxController {
   static FriendsViewController get to => Get.find<FriendsViewController>();
 
-  final friendsController = FriendsController.to;
+  //final friendsController = FriendsController.to;
   final notificationController = NotificationController.to;
   final userService = UserService.to;
 
   UserModel get currentUser => userService.currentUser;
 
   final TextEditingController searchController = TextEditingController();
-  List<UserModel> get friends => friendsController.friends;
+  List<UserModel> get friends => userService.friends;
+
+  @override
+  void onInit() {
+    userService.getFriends(myUid: currentUser.uid);
+    super.onInit();
+  }
 
   void onSearch() async {
     List<UserModel> searchedUsers = await userService.findUsers(

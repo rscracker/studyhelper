@@ -7,7 +7,7 @@ class FriendsBinding implements Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => FriendsViewController());
-    Get.lazyPut(() => FriendsController());
+    //Get.lazyPut(() => FriendsController());
     Get.lazyPut(() => NotificationController());
   }
 }

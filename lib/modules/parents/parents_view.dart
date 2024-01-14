@@ -1,20 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:studyhelper/data/class/model/class_model.dart';
 import 'package:studyhelper/data/user/model/user_model.dart';
+import 'package:studyhelper/modules/parents/parents_controller.dart';
 import 'package:studyhelper/services/user_service.dart';
 import 'package:studyhelper/modules/common/search_dialog.dart';
-import 'package:studyhelper/modules/history/history_view.dart';
-import 'package:studyhelper/modules/main/dialog/class_dialog.dart';
-import 'package:studyhelper/modules/main/dialog/manage_dialog.dart';
 import 'package:studyhelper/modules/main/student_detail.dart';
 import 'package:studyhelper/modules/notifications/notification_view.dart';
 import 'package:studyhelper/utils/app_color.dart';
 import 'package:studyhelper/utils/utils.dart';
 
-class ParentsView extends StatelessWidget {
+class ParentsView extends GetView<ParentsController> {
   const ParentsView({Key? key}) : super(key: key);
 
   @override
@@ -25,12 +22,22 @@ class ParentsView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _Profile(),
-              _Class(),
+              _Profile(
+                user: controller.currentUser,
+                onPressedNotification: controller.onPressedNotification,
+              ),
+              _Class(classes: controller.classes),
               const SizedBox(
                 height: 20,
               ),
-              _Student(),
+              _Student(
+                nameController: controller.nameController,
+                nickController: controller.nickController,
+                onSearch: controller.onSearch,
+                currentUser: controller.currentUser,
+                friends: controller.friends,
+                onPressedStudentDetail: controller.onPressedStudentDetail,
+              ),
             ],
           ),
         ),
@@ -40,9 +47,11 @@ class ParentsView extends StatelessWidget {
 }
 
 class _Profile extends StatelessWidget {
-  const _Profile({Key? key}) : super(key: key);
-
-  UserService get userService => UserService.to;
+  final UserModel user;
+  final VoidCallback onPressedNotification;
+  const _Profile(
+      {required this.user, required this.onPressedNotification, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,44 +80,43 @@ class _Profile extends StatelessWidget {
                 ),
               ),
             ),
-            Text(
-              userService.currentUser.name +
-                  ' ' +
-                  userService.currentUser.type +
-                  '${userService.currentUser.type == '학부모' ? '님' : ''}',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-              ),
-            ),
-            Text(
-              userService.currentUser.nick,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
             const SizedBox(
-              height: 30,
+              height: 10,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _icon(
-                    category: '학생/선생님',
-                    icon: Icons.supervisor_account_rounded,
-                    onPressed: () {}),
-                const SizedBox(
-                  width: 15,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${user.name} 학부모님',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                    ),
+                    Text(
+                      user.nick,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
-                _icon(
-                    category: '알림',
-                    icon: Icons.notifications_none_outlined,
-                    onPressed: () {
-                      Get.to(() => NotificationView());
-                    }),
+                GestureDetector(
+                  onTap: onPressedNotification,
+                  child: Icon(
+                    Icons.notifications_none_outlined,
+                    color: Colors.white,
+                  ),
+                )
               ],
+            ),
+            const SizedBox(
+              height: 10,
             ),
           ],
         ),
@@ -144,7 +152,7 @@ class _Profile extends StatelessWidget {
         ),
         Text(
           category,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
             color: Colors.white,
@@ -156,50 +164,30 @@ class _Profile extends StatelessWidget {
 }
 
 class _Class extends StatelessWidget {
-  _Class({Key? key}) : super(key: key);
-
-  final CollectionReference classCollection =
-      FirebaseFirestore.instance.collection('class');
+  final List<ClassModel> classes;
+  _Class({required this.classes, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 15,
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Obx(
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 15,
+              ),
+              const _Category(
+                title: '수업',
+              ),
+              if (classes.isEmpty) const Text('수업이 없습니다.'),
+              if (classes.isNotEmpty)
+                ...classes.map((e) => _classItem(item: e)).toList()
+            ],
           ),
-          _Category(
-            title: '수업',
-          ),
-          StreamBuilder<QuerySnapshot>(
-              stream: classCollection
-                  .where('parentsId',
-                      arrayContains: UserService.to.currentUser.uid)
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Text('수업이 없습니다.');
-                }
-                List<ClassModel> temp = RxList.empty();
-                snapshot.data!.docs.forEach((e) {
-                  temp.add(
-                      ClassModel.fromJson(e.data() as Map<String, dynamic>));
-                });
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...temp.map((e) => _classItem(item: e)),
-                  ],
-                );
-              }),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _classItem({required ClassModel item}) {
@@ -302,79 +290,80 @@ class _Class extends StatelessWidget {
 }
 
 class _Student extends StatelessWidget {
-  const _Student({Key? key}) : super(key: key);
+  final TextEditingController nameController;
+  final TextEditingController nickController;
+  final Function({required bool isNick}) onSearch;
+  final List<UserModel> friends;
+  final UserModel currentUser;
+  final Function({required UserModel user}) onPressedStudentDetail;
+  const _Student(
+      {required this.nameController,
+      required this.nickController,
+      required this.onSearch,
+      required this.friends,
+      required this.currentUser,
+      required this.onPressedStudentDetail,
+      Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _Category(
-            title: '학생 관리',
-            icon: GestureDetector(
-                onTap: () {
-                  Get.dialog(SearchDialog());
-                },
-                child: Icon(
-                  Icons.add_circle_outline_outlined,
-                  size: 20,
-                )),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Obx(
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _Category(
+                title: '학생 관리',
+                icon: GestureDetector(
+                    onTap: () {
+                      Get.dialog(SearchDialog(
+                        nickController: nickController,
+                        nameController: nameController,
+                        onSearch: onSearch,
+                      ));
+                    },
+                    child: const Icon(
+                      Icons.add_circle_outline_outlined,
+                      size: 20,
+                    )),
+              ),
+              if (friends.isNotEmpty)
+                ...friends.map((e) => _studentItem(user: e)).toList()
+            ],
           ),
-          StreamBuilder(
-              stream: null,
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return SizedBox.shrink();
-                }
-                final friends = snapshot.data!.data() as Map<String, dynamic>;
-                return Column(
-                  children: [
-                    ...List.generate(friends['friends'].length, (index) {
-                      return _studentItem(uid: friends['friends'][index]);
-                    }),
-                  ],
-                );
-              }),
-        ],
-      ),
-    );
+        ));
   }
 
-  Widget _studentItem({required String uid}) {
-    return FutureBuilder(
-        future: UserService.to.getUser(uid: uid),
-        builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              !snapshot.hasData) {
-            return CircularProgressIndicator();
-          }
-          UserModel student = snapshot.data!;
-          return Row(
+  Widget _studentItem({required UserModel user}) {
+    return GestureDetector(
+      onTap: () => onPressedStudentDetail(user: user),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        height: 45,
+        decoration: BoxDecoration(
+          color: AppColor.mainColor.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('${student.name} ${student.type}'),
-                  Text(student.nick),
-                ],
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  Get.to(() => StudentDetail(
-                        student: student,
-                      ));
-                },
-                child: Icon(
-                  Icons.calendar_today_outlined,
+              Text(
+                '${user.nick} ${user.type}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15,
+                  color: Colors.white,
                 ),
-              )
+              ),
             ],
-          );
-        });
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -392,7 +381,7 @@ class _Category extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
           ),
           const Spacer(),
           icon ?? const SizedBox.shrink(),

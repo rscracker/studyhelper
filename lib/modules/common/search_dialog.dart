@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:studyhelper/data/user/model/user_model.dart';
-import 'package:studyhelper/services/user_service.dart';
 import 'package:studyhelper/modules/common/custom_button.dart';
-import 'package:studyhelper/modules/common/custom_dialog.dart';
-import 'package:studyhelper/modules/common/search_result_dialog.dart';
 import 'package:studyhelper/utils/app_color.dart';
 
 class SearchDialog extends StatelessWidget {
-  SearchDialog({Key? key}) : super(key: key);
+  final TextEditingController nameController;
+  final TextEditingController nickController;
+  final Function({required bool isNick}) onSearch;
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController nickController = TextEditingController();
+  const SearchDialog(
+      {required this.nameController,
+      required this.nickController,
+      required this.onSearch,
+      Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +52,10 @@ class SearchDialog extends StatelessWidget {
                 controller: nameController,
                 cursorColor: AppColor.mainColor,
                 textAlign: TextAlign.left,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   focusColor: AppColor.mainColor,
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   enabledBorder: OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(),
                 ),
@@ -65,18 +66,8 @@ class SearchDialog extends StatelessWidget {
             ),
             CustomButton(
               text: '검색',
-              onPressed: () async {
-                if (nameController.text.isNotEmpty) {
-                  final result = await UserService.to.findUsers(
-                      isNick: false, nameOrNick: nameController.text);
-                  if (result.isEmpty) {
-                    Get.dialog(CustomDialog(
-                        text: '검색 결과가 없습니다', onPressed: () => Get.back()));
-                  } else {
-                    Get.back();
-                    //Get.dialog(SearchResultDialog(users: result));
-                  }
-                }
+              onPressed: () {
+                onSearch(isNick: false);
               },
               buttonColor: AppColor.mainColor,
               height: 40,
@@ -100,10 +91,10 @@ class SearchDialog extends StatelessWidget {
                 controller: nickController,
                 cursorColor: AppColor.mainColor,
                 textAlign: TextAlign.left,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   focusColor: AppColor.mainColor,
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   enabledBorder: OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(),
                 ),
@@ -114,19 +105,7 @@ class SearchDialog extends StatelessWidget {
             ),
             CustomButton(
               text: '검색',
-              onPressed: () async {
-                if (nickController.text.isNotEmpty) {
-                  final result = await UserService.to.findUsers(
-                      isNick: false, nameOrNick: nickController.text);
-                  if (result.isEmpty) {
-                    Get.dialog(CustomDialog(
-                        text: '검색 결과가 없습니다', onPressed: () => Get.back()));
-                  } else {
-                    Get.back();
-                    //Get.dialog(SearchResultDialog(users: result));
-                  }
-                }
-              },
+              onPressed: () => onSearch(isNick: true),
               buttonColor: AppColor.mainColor,
               height: 40,
             ),

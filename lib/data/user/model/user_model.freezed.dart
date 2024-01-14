@@ -29,7 +29,8 @@ class _$UserModelTearOff {
       required String phoneNum,
       required String deviceToken,
       required bool isRegistered,
-      required String type}) {
+      required String type,
+      required List<String>? friends}) {
     return _UserModel(
       uid: uid,
       nick: nick,
@@ -39,6 +40,7 @@ class _$UserModelTearOff {
       deviceToken: deviceToken,
       isRegistered: isRegistered,
       type: type,
+      friends: friends,
     );
   }
 
@@ -60,6 +62,7 @@ mixin _$UserModel {
   String get deviceToken => throw _privateConstructorUsedError;
   bool get isRegistered => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
+  List<String>? get friends => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -79,7 +82,8 @@ abstract class $UserModelCopyWith<$Res> {
       String phoneNum,
       String deviceToken,
       bool isRegistered,
-      String type});
+      String type,
+      List<String>? friends});
 }
 
 /// @nodoc
@@ -100,6 +104,7 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? deviceToken = freezed,
     Object? isRegistered = freezed,
     Object? type = freezed,
+    Object? friends = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -134,6 +139,10 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
+      friends: friends == freezed
+          ? _value.friends
+          : friends // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -152,7 +161,8 @@ abstract class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       String phoneNum,
       String deviceToken,
       bool isRegistered,
-      String type});
+      String type,
+      List<String>? friends});
 }
 
 /// @nodoc
@@ -174,6 +184,7 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
     Object? deviceToken = freezed,
     Object? isRegistered = freezed,
     Object? type = freezed,
+    Object? friends = freezed,
   }) {
     return _then(_UserModel(
       uid: uid == freezed
@@ -208,6 +219,10 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
+      friends: friends == freezed
+          ? _value.friends
+          : friends // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -223,7 +238,8 @@ class _$_UserModel implements _UserModel {
       required this.phoneNum,
       required this.deviceToken,
       required this.isRegistered,
-      required this.type});
+      required this.type,
+      required this.friends});
 
   factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
       _$$_UserModelFromJson(json);
@@ -244,10 +260,12 @@ class _$_UserModel implements _UserModel {
   final bool isRegistered;
   @override
   final String type;
+  @override
+  final List<String>? friends;
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, nick: $nick, name: $name, age: $age, phoneNum: $phoneNum, deviceToken: $deviceToken, isRegistered: $isRegistered, type: $type)';
+    return 'UserModel(uid: $uid, nick: $nick, name: $name, age: $age, phoneNum: $phoneNum, deviceToken: $deviceToken, isRegistered: $isRegistered, type: $type, friends: $friends)';
   }
 
   @override
@@ -272,7 +290,9 @@ class _$_UserModel implements _UserModel {
                 const DeepCollectionEquality()
                     .equals(other.isRegistered, isRegistered)) &&
             (identical(other.type, type) ||
-                const DeepCollectionEquality().equals(other.type, type)));
+                const DeepCollectionEquality().equals(other.type, type)) &&
+            (identical(other.friends, friends) ||
+                const DeepCollectionEquality().equals(other.friends, friends)));
   }
 
   @override
@@ -285,7 +305,8 @@ class _$_UserModel implements _UserModel {
       const DeepCollectionEquality().hash(phoneNum) ^
       const DeepCollectionEquality().hash(deviceToken) ^
       const DeepCollectionEquality().hash(isRegistered) ^
-      const DeepCollectionEquality().hash(type);
+      const DeepCollectionEquality().hash(type) ^
+      const DeepCollectionEquality().hash(friends);
 
   @JsonKey(ignore: true)
   @override
@@ -307,7 +328,8 @@ abstract class _UserModel implements UserModel {
       required String phoneNum,
       required String deviceToken,
       required bool isRegistered,
-      required String type}) = _$_UserModel;
+      required String type,
+      required List<String>? friends}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$_UserModel.fromJson;
@@ -328,6 +350,8 @@ abstract class _UserModel implements UserModel {
   bool get isRegistered => throw _privateConstructorUsedError;
   @override
   String get type => throw _privateConstructorUsedError;
+  @override
+  List<String>? get friends => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$UserModelCopyWith<_UserModel> get copyWith =>

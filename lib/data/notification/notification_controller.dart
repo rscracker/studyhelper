@@ -39,6 +39,12 @@ class NotificationController extends GetxController {
     });
   }
 
+  Future<void> deleteNotification(
+      {required NotificationModel notification}) async {
+    await notificationCollection.doc(notification.docId).delete();
+    notifications.remove(notification);
+  }
+
   void getNotification({required String myUid}) {
     RxList<NotificationModel> newNotifications = RxList.empty();
     notificationCollection

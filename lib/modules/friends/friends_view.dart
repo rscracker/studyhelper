@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:studyhelper/data/user/model/user_model.dart';
 import 'package:studyhelper/modules/friends/friends_view_controller.dart';
 import 'package:studyhelper/utils/app_color.dart';
 
@@ -25,7 +26,9 @@ class FriendsView extends GetView<FriendsViewController> {
               searchController: controller.searchController,
               onSearch: controller.onSearch,
             ),
-            _Friends(),
+            _Friends(
+              friends: controller.friends,
+            ),
             //_Teachers(),
             //_Parents(),
           ],
@@ -111,24 +114,56 @@ class _Teachers extends StatelessWidget {
 }
 
 class _Friends extends StatelessWidget {
-  const _Friends({Key? key}) : super(key: key);
+  final List<UserModel> friends;
+  const _Friends({required this.friends, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          '친구(0)',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 15,
-          ),
+    return Obx(() => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '친구(${friends.length.toString()})',
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ...friends.map((e) => _friendItem(friend: e)).toList(),
+          ],
+        ));
+  }
+
+  Widget _friendItem({required UserModel friend}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: AppColor.mainColor.withOpacity(0.3)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            Text(
+              friend.name,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              ' (${friend.nick})',
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.mainColor),
+            ),
+          ],
         ),
-        const SizedBox(
-          height: 10,
-        ),
-      ],
+      ),
     );
   }
 }

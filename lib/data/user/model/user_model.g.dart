@@ -15,6 +15,8 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       deviceToken: json['deviceToken'] as String,
       isRegistered: json['isRegistered'] as bool,
       type: json['type'] as String,
+      friends:
+          (json['friends'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
@@ -27,4 +29,5 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'deviceToken': instance.deviceToken,
       'isRegistered': instance.isRegistered,
       'type': instance.type,
+      'friends': instance.friends,
     };

@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:studyhelper/data/todo/model/todo_model.dart';
 import 'package:studyhelper/data/user/model/user_model.dart';
+import 'package:studyhelper/modules/main/bindings/student_detail_view_controller.dart';
 import 'package:studyhelper/modules/main/dialog/todo_dialog.dart';
 import 'package:studyhelper/modules/stopwatch/stopwatch_view.dart';
 import 'package:studyhelper/services/todo_service.dart';
 import 'package:studyhelper/utils/app_color.dart';
 
-class StudentDetail extends StatelessWidget {
-  final UserModel student;
-  const StudentDetail({required this.student, Key? key}) : super(key: key);
+class StudentDetailView extends GetView<StudentDetailViewController> {
+  const StudentDetailView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(student.name),
+        title: Text(controller.selectedUser.name),
         centerTitle: true,
         backgroundColor: AppColor.mainColor,
         elevation: 0,
@@ -24,7 +24,8 @@ class StudentDetail extends StatelessWidget {
         child: Column(
           children: [
             _Todo(
-              student: student,
+              student: controller.selectedUser,
+              todos: controller.todos,
             ),
           ],
         ),
@@ -35,81 +36,51 @@ class StudentDetail extends StatelessWidget {
 
 class _Todo extends StatelessWidget {
   final UserModel student;
-  final todoService = TodoService.to;
-
-  _Todo({required this.student, Key? key}) : super(key: key);
+  final List<TodoModel> todos;
+  _Todo({required this.student, required this.todos, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 15,
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Obx(
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 15,
+              ),
+              const _Category(
+                title: '할 일',
+              ),
+              ...todos.map((e) => _todoItem(todo: e)).toList(),
+            ],
           ),
-          _Category(
-            title: '할 일',
-          ),
-          FutureBuilder(
-              future: todoService.getStudentTodo(uid: student.uid),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<TodoModel>> snapshot) {
-                if (!snapshot.hasData || snapshot.data!.isEmpty)
-                  return Text('${student.name}학생의 오늘 할 일이 없습니다.');
-                return Column(
-                  children: [...snapshot.data!.map((e) => _todoItem(todo: e))],
-                );
-              })
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _todoItem({required TodoModel todo}) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.white,
       ),
       width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            GestureDetector(
-                onTap: () async {
-                  await todoService.onTodoDone(todo: todo);
-                },
-                child: Container(
-                  width: 22,
-                  height: 22,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 1,
-                        color: AppColor.mainColor,
-                      ),
-                      borderRadius: BorderRadius.circular(30)),
-                  child: !todo.isDone
-                      ? SizedBox.shrink()
-                      : Center(
-                          child: Icon(
-                          Icons.check,
-                          size: 16,
-                        )),
-                )),
-            const SizedBox(
-              width: 15,
-            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   todo.subject,
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w700, fontSize: 16),
                 ),
                 const SizedBox(
                   height: 5,
@@ -118,7 +89,7 @@ class _Todo extends StatelessWidget {
                   width: Get.width - 150,
                   child: Text(
                     todo.todo,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 14,
                         color: AppColor.mainColor,
                         fontWeight: FontWeight.w500),
@@ -142,31 +113,6 @@ class _Todo extends StatelessWidget {
                 ),
               ],
             ),
-            const Spacer(),
-            Column(
-              children: [
-                if (!todo.isDone)
-                  GestureDetector(
-                    onTap: (() => Get.to(() => StopWatchView(
-                          todo: todo,
-                        ))),
-                    child: Icon(
-                      Icons.timer_outlined,
-                      size: 20,
-                    ),
-                  ),
-                const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () async {
-                    await todoService.deteteTodo(todo: todo);
-                  },
-                  child: Icon(
-                    Icons.delete_outline_outlined,
-                    size: 20,
-                  ),
-                ),
-              ],
-            )
           ],
         ),
       ),
