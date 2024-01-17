@@ -130,9 +130,9 @@ class UserService extends GetxService {
         if (currentUser.type == '선생님') {
           Get.to(() => TeacherView());
         } else if (currentUser.type == '학부모') {
-          Get.toNamed('/parents');
+          Get.offNamed('/parents');
         } else {
-          Get.toNamed('/main');
+          Get.offNamed('/main');
         }
       } else {
         Get.to(() => RegisterView());

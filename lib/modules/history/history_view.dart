@@ -37,25 +37,6 @@ class HistoryView extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // SfCartesianChart(
-              //     primaryXAxis: CategoryAxis(),
-              //     primaryYAxis:
-              //         NumericAxis(minimum: 0, maximum: 24, interval: 10),
-              //     tooltipBehavior: _toolTip,
-              //     series: <CartesianSeries<_ChartData, String>>[
-              //       ColumnSeries<_ChartData, String>(
-              //           dataSource: [
-              //             _ChartData('국어', todoService.korean.toDouble()),
-              //             _ChartData(
-              //                 '영어', todoService.english.toDouble()),
-              //             _ChartData('수학', todoService.math.toDouble()),
-              //             _ChartData('기타', todoService.etc.toDouble()),
-              //           ],
-              //           xValueMapper: (_ChartData data, _) => data.x,
-              //           yValueMapper: (_ChartData data, _) => data.y,
-              //           name: 'Gold',
-              //           color: AppColor.mainColor)
-              //     ]),
               Summary(),
             ],
           ),
@@ -191,36 +172,36 @@ class _SummaryState extends State<Summary> {
             const SizedBox(
               height: 15,
             ),
-            CustomButton(
-              text: '오답 노트',
-              buttonColor: AppColor.mainColor,
-              textColor: Colors.white,
-              onPressed: () {},
-              height: 35,
-              borderColor: Colors.white,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomButton(
-              text: '약점 분석',
-              buttonColor: AppColor.mainColor,
-              textColor: Colors.white,
-              onPressed: () {},
-              height: 35,
-              borderColor: Colors.white,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomButton(
-              text: '메모',
-              buttonColor: AppColor.mainColor,
-              textColor: Colors.white,
-              onPressed: () {},
-              height: 35,
-              borderColor: Colors.white,
-            ),
+            // CustomButton(
+            //   text: '오답 노트',
+            //   buttonColor: AppColor.mainColor,
+            //   textColor: Colors.white,
+            //   onPressed: () {},
+            //   height: 35,
+            //   borderColor: Colors.white,
+            // ),
+            // const SizedBox(
+            //   height: 10,
+            // ),
+            // CustomButton(
+            //   text: '약점 분석',
+            //   buttonColor: AppColor.mainColor,
+            //   textColor: Colors.white,
+            //   onPressed: () {},
+            //   height: 35,
+            //   borderColor: Colors.white,
+            // ),
+            // const SizedBox(
+            //   height: 10,
+            // ),
+            // CustomButton(
+            //   text: '메모',
+            //   buttonColor: AppColor.mainColor,
+            //   textColor: Colors.white,
+            //   onPressed: () {},
+            //   height: 35,
+            //   borderColor: Colors.white,
+            // ),
           ],
         ),
       ),

@@ -6,6 +6,7 @@ import 'package:studyhelper/modules/main/main_controller.dart';
 import 'package:studyhelper/modules/history/history_view.dart';
 import 'package:studyhelper/modules/main/dialog/todo_dialog.dart';
 import 'package:studyhelper/modules/notifications/notification_view.dart';
+import 'package:studyhelper/modules/schedule/schedule_view.dart';
 import 'package:studyhelper/modules/stopwatch/stopwatch_view.dart';
 import 'package:studyhelper/utils/app_color.dart';
 import 'package:studyhelper/utils/utils.dart';
@@ -110,7 +111,9 @@ class _Profile extends StatelessWidget {
                 _icon(
                     category: '일정',
                     icon: Icons.calendar_today_outlined,
-                    onPressed: () {}),
+                    onPressed: () {
+                      Get.to(() => ScheduleView());
+                    }),
                 _icon(
                     category: '친구',
                     icon: Icons.supervisor_account_rounded,

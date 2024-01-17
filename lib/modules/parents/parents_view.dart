@@ -84,7 +84,6 @@ class _Profile extends StatelessWidget {
               height: 10,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,13 +105,24 @@ class _Profile extends StatelessWidget {
                     ),
                   ],
                 ),
+                const Spacer(),
                 GestureDetector(
                   onTap: onPressedNotification,
-                  child: Icon(
+                  child: const Icon(
                     Icons.notifications_none_outlined,
                     color: Colors.white,
                   ),
-                )
+                ),
+                // const SizedBox(
+                //   width: 15,
+                // ),
+                // GestureDetector(
+                //   onTap: onPressedNotification,
+                //   child: const Icon(
+                //     Icons.settings,
+                //     color: Colors.white,
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(
