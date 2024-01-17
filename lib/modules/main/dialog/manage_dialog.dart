@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:studyhelper/data/class/class_controller.dart';
 import 'package:studyhelper/data/class/model/class_model.dart';
 import 'package:studyhelper/data/user/model/user_model.dart';
 import 'package:studyhelper/services/todo_service.dart';
@@ -129,7 +130,7 @@ class _ManageDialogState extends State<ManageDialog> {
               buttonColor: AppColor.mainColor,
               text: '확인',
               onPressed: () async {
-                await TodoService.to
+                await ClassController.to
                     .changeClass(item: classItem.copyWith(date: classDate));
                 Get.back();
               })

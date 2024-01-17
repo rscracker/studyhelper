@@ -63,4 +63,8 @@ class ClassController extends GetxController {
     }
     _classes(temp);
   }
+
+  Future<void> changeClass({required ClassModel item}) async {
+    await classCollection.doc(item.classId).set(item.toJson());
+  }
 }

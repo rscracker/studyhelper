@@ -30,7 +30,8 @@ class _$ClassModelTearOff {
       required String teacherId,
       required List<String> parentsId,
       required List<String> studentId,
-      required int duration}) {
+      required int duration,
+      List<String>? homework}) {
     return _ClassModel(
       classId: classId,
       className: className,
@@ -41,6 +42,7 @@ class _$ClassModelTearOff {
       parentsId: parentsId,
       studentId: studentId,
       duration: duration,
+      homework: homework,
     );
   }
 
@@ -63,6 +65,7 @@ mixin _$ClassModel {
   List<String> get parentsId => throw _privateConstructorUsedError;
   List<String> get studentId => throw _privateConstructorUsedError;
   int get duration => throw _privateConstructorUsedError;
+  List<String>? get homework => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -84,7 +87,8 @@ abstract class $ClassModelCopyWith<$Res> {
       String teacherId,
       List<String> parentsId,
       List<String> studentId,
-      int duration});
+      int duration,
+      List<String>? homework});
 }
 
 /// @nodoc
@@ -106,6 +110,7 @@ class _$ClassModelCopyWithImpl<$Res> implements $ClassModelCopyWith<$Res> {
     Object? parentsId = freezed,
     Object? studentId = freezed,
     Object? duration = freezed,
+    Object? homework = freezed,
   }) {
     return _then(_value.copyWith(
       classId: classId == freezed
@@ -144,6 +149,10 @@ class _$ClassModelCopyWithImpl<$Res> implements $ClassModelCopyWith<$Res> {
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as int,
+      homework: homework == freezed
+          ? _value.homework
+          : homework // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -163,7 +172,8 @@ abstract class _$ClassModelCopyWith<$Res> implements $ClassModelCopyWith<$Res> {
       String teacherId,
       List<String> parentsId,
       List<String> studentId,
-      int duration});
+      int duration,
+      List<String>? homework});
 }
 
 /// @nodoc
@@ -187,6 +197,7 @@ class __$ClassModelCopyWithImpl<$Res> extends _$ClassModelCopyWithImpl<$Res>
     Object? parentsId = freezed,
     Object? studentId = freezed,
     Object? duration = freezed,
+    Object? homework = freezed,
   }) {
     return _then(_ClassModel(
       classId: classId == freezed
@@ -225,6 +236,10 @@ class __$ClassModelCopyWithImpl<$Res> extends _$ClassModelCopyWithImpl<$Res>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as int,
+      homework: homework == freezed
+          ? _value.homework
+          : homework // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -241,7 +256,8 @@ class _$_ClassModel implements _ClassModel {
       required this.teacherId,
       required this.parentsId,
       required this.studentId,
-      required this.duration});
+      required this.duration,
+      this.homework});
 
   factory _$_ClassModel.fromJson(Map<String, dynamic> json) =>
       _$$_ClassModelFromJson(json);
@@ -264,10 +280,12 @@ class _$_ClassModel implements _ClassModel {
   final List<String> studentId;
   @override
   final int duration;
+  @override
+  final List<String>? homework;
 
   @override
   String toString() {
-    return 'ClassModel(classId: $classId, className: $className, subject: $subject, date: $date, time: $time, teacherId: $teacherId, parentsId: $parentsId, studentId: $studentId, duration: $duration)';
+    return 'ClassModel(classId: $classId, className: $className, subject: $subject, date: $date, time: $time, teacherId: $teacherId, parentsId: $parentsId, studentId: $studentId, duration: $duration, homework: $homework)';
   }
 
   @override
@@ -298,7 +316,10 @@ class _$_ClassModel implements _ClassModel {
                     .equals(other.studentId, studentId)) &&
             (identical(other.duration, duration) ||
                 const DeepCollectionEquality()
-                    .equals(other.duration, duration)));
+                    .equals(other.duration, duration)) &&
+            (identical(other.homework, homework) ||
+                const DeepCollectionEquality()
+                    .equals(other.homework, homework)));
   }
 
   @override
@@ -312,7 +333,8 @@ class _$_ClassModel implements _ClassModel {
       const DeepCollectionEquality().hash(teacherId) ^
       const DeepCollectionEquality().hash(parentsId) ^
       const DeepCollectionEquality().hash(studentId) ^
-      const DeepCollectionEquality().hash(duration);
+      const DeepCollectionEquality().hash(duration) ^
+      const DeepCollectionEquality().hash(homework);
 
   @JsonKey(ignore: true)
   @override
@@ -335,7 +357,8 @@ abstract class _ClassModel implements ClassModel {
       required String teacherId,
       required List<String> parentsId,
       required List<String> studentId,
-      required int duration}) = _$_ClassModel;
+      required int duration,
+      List<String>? homework}) = _$_ClassModel;
 
   factory _ClassModel.fromJson(Map<String, dynamic> json) =
       _$_ClassModel.fromJson;
@@ -358,6 +381,8 @@ abstract class _ClassModel implements ClassModel {
   List<String> get studentId => throw _privateConstructorUsedError;
   @override
   int get duration => throw _privateConstructorUsedError;
+  @override
+  List<String>? get homework => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$ClassModelCopyWith<_ClassModel> get copyWith =>

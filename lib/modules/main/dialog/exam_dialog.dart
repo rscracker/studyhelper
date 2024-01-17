@@ -161,10 +161,6 @@ class _ExamDialogState extends State<ExamDialog> {
                 buttonColor: AppColor.mainColor,
                 text: '추가',
                 onPressed: () async {
-                  todoService.addExam(
-                      date: todoDate,
-                      type: type,
-                      subject: subjectController.text);
                   Get.back();
                 })
           ],

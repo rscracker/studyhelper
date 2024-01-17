@@ -19,6 +19,9 @@ _$_ClassModel _$$_ClassModelFromJson(Map<String, dynamic> json) =>
       studentId:
           (json['studentId'] as List<dynamic>).map((e) => e as String).toList(),
       duration: json['duration'] as int,
+      homework: (json['homework'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$$_ClassModelToJson(_$_ClassModel instance) =>
@@ -32,4 +35,5 @@ Map<String, dynamic> _$$_ClassModelToJson(_$_ClassModel instance) =>
       'parentsId': instance.parentsId,
       'studentId': instance.studentId,
       'duration': instance.duration,
+      'homework': instance.homework,
     };

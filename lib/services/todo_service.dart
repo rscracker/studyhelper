@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:studyhelper/data/class/model/class_model.dart';
 import 'package:studyhelper/data/todo/model/todo_model.dart';
 import 'package:studyhelper/utils/utils.dart';
 import 'package:studyhelper/data/user/model/user_model.dart';
@@ -14,15 +12,6 @@ class TodoService extends GetxService {
 
   final CollectionReference todoCollection =
       FirebaseFirestore.instance.collection('todo');
-
-  final CollectionReference homeworkCollection =
-      FirebaseFirestore.instance.collection('homework');
-
-  final CollectionReference examCollection =
-      FirebaseFirestore.instance.collection('exam');
-
-  final CollectionReference classCollection =
-      FirebaseFirestore.instance.collection('class');
 
   RxList<TodoModel> todos = RxList.empty();
   RxList<TodoModel> thisWeekTodos = RxList.empty();
@@ -43,18 +32,13 @@ class TodoService extends GetxService {
 
   RxInt maxTime = 0.obs;
 
-  @override
-  void onInit() async {
-    super.onInit();
-  }
-
   Future<void> createTodo(
       {required String subject,
       required String todo,
       required DateTime date}) async {
     String docId = todoCollection
         .doc(user.uid)
-        .collection(DateFormat('yyyy-MM-dd').format(DateTime.now()))
+        .collection(Utils.convertDate(date: DateTime.now()))
         .doc()
         .id;
     TodoModel newTodo = TodoModel(
@@ -68,7 +52,7 @@ class TodoService extends GetxService {
     todos.add(newTodo);
     await todoCollection
         .doc(user.uid)
-        .collection(DateFormat('yyyy-MM-dd').format(DateTime.now()))
+        .collection(Utils.convertDate(date: DateTime.now()))
         .doc(docId)
         .set(newTodo.toJson());
   }
@@ -77,7 +61,7 @@ class TodoService extends GetxService {
     todos.remove(todo);
     await todoCollection
         .doc(user.uid)
-        .collection(DateFormat('yyyy-MM-dd').format(todo.createdAt))
+        .collection(Utils.convertDate(date: todo.createdAt))
         .doc(todo.todoId)
         .delete();
   }
@@ -85,9 +69,8 @@ class TodoService extends GetxService {
   Future<void> getTodo() async {
     QuerySnapshot snapshot = await todoCollection
         .doc(user.uid)
-        .collection(DateFormat('yyyy-MM-dd').format(DateTime.now()))
+        .collection(Utils.convertDate(date: DateTime.now()))
         .get();
-    print(snapshot);
     List<TodoModel> temp = RxList.empty();
     for (final e in snapshot.docs) {
       temp.add(TodoModel.fromJson(e.data() as Map<String, dynamic>));
@@ -98,7 +81,7 @@ class TodoService extends GetxService {
   Future<List<TodoModel>> getStudentTodo({required String uid}) async {
     QuerySnapshot snapshot = await todoCollection
         .doc(uid)
-        .collection(DateFormat('yyyy-MM-dd').format(DateTime.now()))
+        .collection(Utils.convertDate(date: DateTime.now()))
         .get();
 
     List<TodoModel> temp = RxList.empty();
@@ -134,7 +117,7 @@ class TodoService extends GetxService {
   Future<void> onTodoDone({required TodoModel todo}) async {
     await todoCollection
         .doc(user.uid)
-        .collection(DateFormat('yyyy-MM-dd').format(DateTime.now()))
+        .collection(Utils.convertDate(date: todo.createdAt))
         .doc(todo.todoId)
         .update({'isDone': !todo.isDone});
 
@@ -149,36 +132,9 @@ class TodoService extends GetxService {
   Future<void> timeCheck({required TodoModel todo, required int time}) async {
     await todoCollection
         .doc(user.uid)
-        .collection(DateFormat('yyyy-MM-dd').format(todo.createdAt))
+        .collection(Utils.convertDate(date: todo.createdAt))
         .doc(todo.todoId)
         .update({'leadTime': FieldValue.increment(time)});
     await getTodo();
-  }
-
-  Stream<DocumentSnapshot> getHomework() {
-    return homeworkCollection.doc(user.uid).snapshots();
-  }
-
-  Future<void> addExam(
-      {required DateTime date,
-      required String type,
-      required String subject}) async {
-    await examCollection.add({
-      'uid': user.uid,
-      'date': date.toIso8601String(),
-      'type': type,
-      'subject': subject.isNotEmpty ? subject : '전 과목',
-    });
-  }
-
-  Stream<QuerySnapshot> getExams() {
-    return examCollection
-        .where('uid', isEqualTo: user.uid)
-        .where('date', isGreaterThan: DateTime.now().toIso8601String())
-        .snapshots();
-  }
-
-  Future<void> changeClass({required ClassModel item}) async {
-    await classCollection.doc(item.classId).set(item.toJson());
   }
 }

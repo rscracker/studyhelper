@@ -16,6 +16,7 @@ class ClassModel with _$ClassModel {
     required List<String> parentsId,
     required List<String> studentId,
     required int duration,
+    List<String>? homework,
   }) = _ClassModel;
 
   factory ClassModel.fromJson(Map<String, dynamic> json) =>
