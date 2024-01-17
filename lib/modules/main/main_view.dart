@@ -13,12 +13,6 @@ import 'package:studyhelper/utils/utils.dart';
 
 class MainView extends GetView<MainController> {
   const MainView({Key? key}) : super(key: key);
-  // @override
-  // void initState() {
-  //   todoService.getTodo();
-  //   todoService.getThisWeekTodos();
-  //   super.initState();
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +25,7 @@ class MainView extends GetView<MainController> {
             _Profile(
               name: controller.currentUser.name,
               nick: controller.currentUser.nick,
+              onPressedSetting: controller.onPressedSetting,
             ),
             _Class(
               classes: controller.classes,
@@ -50,8 +45,13 @@ class MainView extends GetView<MainController> {
 class _Profile extends StatelessWidget {
   final String name;
   final String nick;
+  final VoidCallback onPressedSetting;
 
-  const _Profile({required this.name, required this.nick, Key? key})
+  const _Profile(
+      {required this.name,
+      required this.nick,
+      required this.onPressedSetting,
+      Key? key})
       : super(key: key);
 
   @override
@@ -68,18 +68,34 @@ class _Profile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 40,
-              child: Align(
-                child: Text(
-                  Utils.convertDate(date: DateTime.now()),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    fontSize: 23,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  height: 40,
+                  child: Align(
+                    child: Text(
+                      Utils.convertDate(date: DateTime.now()),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                        fontSize: 23,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                GestureDetector(
+                  onTap: onPressedSetting,
+                  child: const Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                    size: 23,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
             ),
             Text(
               name,

@@ -32,4 +32,8 @@ class MainController extends GetxController {
   void onDeleteTodo(TodoModel todo) {
     todoService.deteteTodo(todo: todo);
   }
+
+  void onPressedSetting() {
+    Get.toNamed('/setting');
+  }
 }

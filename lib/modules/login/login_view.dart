@@ -1,27 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studyhelper/services/user_service.dart';
-import 'package:studyhelper/modules/common/custom_button.dart';
-import 'package:studyhelper/modules/main/main_view.dart';
+import 'package:studyhelper/modules/login/login_view_controller.dart';
 import 'package:studyhelper/utils/app_color.dart';
 
-class LoginView extends StatefulWidget {
+class LoginView extends GetView<LoginViewController> {
   const LoginView({Key? key}) : super(key: key);
-
-  @override
-  State<LoginView> createState() => _LoginViewState();
-}
-
-class _LoginViewState extends State<LoginView> {
-  final userService = UserService.to;
-
-  @override
-  void initState() {
-    userService.autoLogin();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,37 +28,21 @@ class _LoginViewState extends State<LoginView> {
             ),
             _Item(
               category: '전화번호',
-              controller: userService.phoneNumController,
+              controller: controller.phoneNumController,
               buttonText: '인증번호 발송',
               maxLength: 11,
-              onPressed: () async {
-                await userService.smsAuth();
-              },
+              onPressed: controller.onSend,
             ),
             const SizedBox(
               height: 20,
             ),
             _Item(
               category: '인증번호',
-              controller: userService.authNumController,
+              controller: controller.authNumController,
               maxLength: 6,
               buttonText: '인증하기',
-              onPressed: () async {
-                await userService.signInWithPhoneNumber();
-              },
+              onPressed: controller.onAuth,
             ),
-            // const SizedBox(
-            //   height: 15,
-            // ),
-            // Row(
-            //   children: [
-            //     Icon(Icons.check_box_outline_blank_rounded),
-            //     const SizedBox(
-            //       width: 7,
-            //     ),
-            //     Text('자동 로그인'),
-            //   ],
-            // )
           ],
         ),
       ),
@@ -106,7 +74,7 @@ class _Item extends StatelessWidget {
       children: [
         Text(
           category,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 14,
             color: AppColor.textColor,
@@ -125,17 +93,17 @@ class _Item extends StatelessWidget {
               onPressed: onPressed,
               child: Text(
                 buttonText,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
                   color: Color(0xff3478f6),
                 ),
               ),
             ),
-            enabledBorder: UnderlineInputBorder(
+            enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: AppColor.defaultColor2),
             ),
-            focusedBorder: UnderlineInputBorder(
+            focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: AppColor.defaultColor2),
             ),
           ),

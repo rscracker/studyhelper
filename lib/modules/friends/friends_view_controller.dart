@@ -45,7 +45,7 @@ class FriendsViewController extends GetxController {
   }) async {
     await notificationController.addNotifcation(
         receiver: user,
-        content: '${user.name}님의 친구 요청이 있습니다.',
+        content: '${currentUser.name}님의 친구 요청이 있습니다.',
         myUid: currentUser.uid,
         type: 'friendRequest');
     Get.back();

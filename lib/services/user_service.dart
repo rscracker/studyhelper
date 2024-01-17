@@ -52,7 +52,7 @@ class UserService extends GetxService {
         await prefs.setString('uid', temp.uid);
         bool result = await checkUser(uid: temp.uid);
         if (result) {
-          Get.to(() => MainView());
+          Get.offNamed('/main');
         } else {
           Get.to(() => RegisterView());
         }
@@ -139,6 +139,8 @@ class UserService extends GetxService {
       }
     }
   }
+
+  void signOut() async {}
 
   Future<UserModel> findUser({required String nick}) async {
     QuerySnapshot snapshot =

@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:studyhelper/modules/login/login_view_controller.dart';
 import 'package:studyhelper/modules/main/bindings/main_binding.dart';
 import 'package:studyhelper/routes/app_pages.dart';
 import 'package:studyhelper/services/notification_service.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
         Get.put(UserService());
         Get.put(TodoService());
         Get.put(NotificationService());
+        Get.put(LoginViewController());
       }),
       getPages: AppPages.routes,
     );

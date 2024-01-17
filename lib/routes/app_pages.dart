@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:studyhelper/modules/friends/bindings/friends_binding.dart';
 import 'package:studyhelper/modules/friends/friends_view.dart';
 import 'package:studyhelper/modules/history/history_view.dart';
+import 'package:studyhelper/modules/login/bindings/login_view_binding.dart';
+import 'package:studyhelper/modules/login/login_view.dart';
 import 'package:studyhelper/modules/main/bindings/main_binding.dart';
 import 'package:studyhelper/modules/main/bindings/student_detail_binding.dart';
 import 'package:studyhelper/modules/main/main_controller.dart';
@@ -11,6 +13,8 @@ import 'package:studyhelper/modules/notifications/bindings/notification_binding.
 import 'package:studyhelper/modules/notifications/notification_view.dart';
 import 'package:studyhelper/modules/parents/bindings/parents_binding.dart';
 import 'package:studyhelper/modules/parents/parents_view.dart';
+import 'package:studyhelper/modules/setting/bindings/setting_view_binding.dart';
+import 'package:studyhelper/modules/setting/setting_view.dart';
 
 class AppPages {
   AppPages._();
@@ -20,10 +24,18 @@ class AppPages {
       MainBinding(),
     ]),
     GetPage(
+        name: '/login',
+        page: () => const LoginView(),
+        binding: LoginViewBinding()),
+    GetPage(
         name: '/friends',
         page: () => const FriendsView(),
         binding: FriendsBinding()),
     GetPage(name: '/history', page: () => HistoryView()),
+    GetPage(
+        name: '/setting',
+        page: () => const SettingView(),
+        binding: SettingViewBinding()),
     GetPage(
         name: '/notification',
         page: () => NotificationView(),
@@ -35,6 +47,6 @@ class AppPages {
     GetPage(
         name: '/studentDetail',
         page: () => const StudentDetailView(),
-        binding: StudnetDetailBinding())
+        binding: StudnetDetailBinding()),
   ];
 }

@@ -10,11 +10,7 @@ import 'package:studyhelper/modules/common/custom_button.dart';
 import 'package:studyhelper/utils/app_color.dart';
 
 class NotificationView extends GetView<NotificationViewController> {
-  NotificationView({Key? key}) : super(key: key);
-
-  final userService = UserService.to;
-  final notificationService = NotificationService.to;
-  UserModel get user => userService.currentUser;
+  const NotificationView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
