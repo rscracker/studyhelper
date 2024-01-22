@@ -3,16 +3,13 @@ import 'package:get/get.dart';
 import 'package:studyhelper/data/class/model/class_model.dart';
 import 'package:studyhelper/data/todo/model/todo_model.dart';
 import 'package:studyhelper/modules/main/main_controller.dart';
-import 'package:studyhelper/modules/history/history_view.dart';
 import 'package:studyhelper/modules/main/dialog/todo_dialog.dart';
-import 'package:studyhelper/modules/notifications/notification_view.dart';
-import 'package:studyhelper/modules/schedule/schedule_view.dart';
 import 'package:studyhelper/modules/stopwatch/stopwatch_view.dart';
 import 'package:studyhelper/utils/app_color.dart';
 import 'package:studyhelper/utils/utils.dart';
 
 class MainView extends GetView<MainController> {
-  const MainView({Key? key}) : super(key: key);
+  const MainView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,8 +48,7 @@ class _Profile extends StatelessWidget {
       {required this.name,
       required this.nick,
       required this.onPressedSetting,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +124,7 @@ class _Profile extends StatelessWidget {
                     category: '일정',
                     icon: Icons.calendar_today_outlined,
                     onPressed: () {
-                      Get.to(() => ScheduleView());
+                      Get.toNamed('/schedule');
                     }),
                 _icon(
                     category: '친구',
@@ -192,7 +188,7 @@ class _Profile extends StatelessWidget {
 class _Category extends StatelessWidget {
   final String title;
   final Widget? icon;
-  const _Category({required this.title, this.icon, Key? key}) : super(key: key);
+  const _Category({required this.title, this.icon, super.key});
 
   @override
   Widget build(BuildContext context) {

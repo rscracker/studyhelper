@@ -7,9 +7,8 @@ class LoginViewController extends GetxController {
 
   final userService = UserService.to;
 
-  TextEditingController get phoneNumController =>
-      userService.phoneNumController;
-  TextEditingController get authNumController => userService.authNumController;
+  final TextEditingController phoneNumController = TextEditingController();
+  final TextEditingController authNumController = TextEditingController();
 
   @override
   void onInit() {
@@ -17,13 +16,18 @@ class LoginViewController extends GetxController {
     super.onInit();
   }
 
-  void onSend() {
+  void onSend() async {
+    print('+82${phoneNumController.text.substring(1, 11)}');
     if (phoneNumController.text.length == 11) {
-      userService.smsAuth();
+      await userService.smsAuth(
+          phoneNum: '+82${phoneNumController.text.substring(1, 11)}');
     }
   }
 
   void onAuth() {
-    userService.signInWithPhoneNumber();
+    userService.signInWithPhoneNumber(
+      authNum: authNumController.text,
+      phoneNum: phoneNumController.text,
+    );
   }
 }

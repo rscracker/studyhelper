@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:studyhelper/data/todo/model/todo_model.dart';
 import 'package:studyhelper/modules/common/custom_button.dart';
+import 'package:studyhelper/modules/common/custom_dialog.dart';
 import 'package:studyhelper/services/todo_service.dart';
 import 'package:studyhelper/utils/app_color.dart';
 import 'package:studyhelper/utils/utils.dart';
@@ -120,12 +121,21 @@ class _TodoDialogState extends State<TodoDialog> {
                 buttonColor: AppColor.mainColor,
                 text: '추가',
                 onPressed: () async {
-                  await todoService.createTodo(
-                    subject: subjectController.text,
-                    todo: todoController.text,
-                    date: todoDate,
-                  );
-                  Get.back();
+                  if (todoController.text.isEmpty ||
+                      subjectController.text.isEmpty) {
+                    Get.dialog(CustomDialog(
+                        text: '모두 입력해주세요',
+                        onPressed: () {
+                          Get.back();
+                        }));
+                  } else {
+                    await todoService.createTodo(
+                      subject: subjectController.text,
+                      todo: todoController.text,
+                      date: todoDate,
+                    );
+                    Get.back();
+                  }
                 })
           ],
         ),

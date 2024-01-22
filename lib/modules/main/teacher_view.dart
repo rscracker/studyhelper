@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studyhelper/data/class/model/class_model.dart';
+import 'package:studyhelper/data/notification/notification_controller.dart';
 import 'package:studyhelper/data/user/model/user_model.dart';
 import 'package:studyhelper/services/user_service.dart';
 import 'package:studyhelper/modules/main/dialog/class_dialog.dart';
@@ -139,7 +140,9 @@ class _Class extends StatelessWidget {
             ],
           ),
           ...List.generate(item.studentId.length, (index) {
-            return _StudentItem(uid: item.studentId[index]);
+            return _StudentItem(
+              studentId: item.studentId[index],
+            );
           })
         ],
       ),
@@ -179,13 +182,13 @@ class _Student extends StatelessWidget {
 }
 
 class _StudentItem extends StatelessWidget {
-  final String uid;
-  _StudentItem({required this.uid, Key? key}) : super(key: key);
+  final String studentId;
+  _StudentItem({required this.studentId, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: UserService.to.getUser(uid: uid),
+        future: UserService.to.getUser(uid: studentId),
         builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting ||
               !snapshot.hasData) {
@@ -208,7 +211,10 @@ class _StudentItem extends StatelessWidget {
                 ),
                 GestureDetector(
                     onTap: () {
-
+                      NotificationController.to.addNotifcation(
+                          receiver: snapshot.data!,
+                          content: '수학선생님이 5분뒤에 도착합니다.',
+                          myUid: UserService.to.currentUser.uid);
                     },
                     child: Icon(
                       Icons.chat_bubble_outline,

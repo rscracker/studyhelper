@@ -42,7 +42,7 @@ class NotificationService extends GetxService {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestPermission();
+        ?.requestNotificationsPermission();
 
     const DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings(

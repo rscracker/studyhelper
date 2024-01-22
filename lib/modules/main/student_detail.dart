@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:studyhelper/data/todo/model/todo_model.dart';
 import 'package:studyhelper/data/user/model/user_model.dart';
-import 'package:studyhelper/modules/main/bindings/student_detail_view_controller.dart';
+import 'package:studyhelper/modules/main/student_detail_view_controller.dart';
 import 'package:studyhelper/modules/main/dialog/todo_dialog.dart';
 import 'package:studyhelper/modules/stopwatch/stopwatch_view.dart';
 import 'package:studyhelper/services/todo_service.dart';

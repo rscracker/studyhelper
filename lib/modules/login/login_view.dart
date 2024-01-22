@@ -5,7 +5,7 @@ import 'package:studyhelper/modules/login/login_view_controller.dart';
 import 'package:studyhelper/utils/app_color.dart';
 
 class LoginView extends GetView<LoginViewController> {
-  const LoginView({Key? key}) : super(key: key);
+  const LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
